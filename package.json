@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prisma:seed": "prisma db seed"
+    "prisma:seed": "prisma db seed",
+    "vercel-build": "prisma generate && prisma migrate deploy && next build"
   },
   "dependencies": {
     "@faker-js/faker": "^8.0.2",

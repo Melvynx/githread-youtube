@@ -3,17 +3,32 @@ import { getAuthSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { Post } from '@/src/features/post/Post';
 import { getUserProfile } from '@/src/query/user.query';
+import { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 import { Profile } from './Profile';
 import { followUser } from './follow.action';
 
-export default async function UserPage({
+export const generateMetadata = async ({
   params,
-}: {
+}: PageParams): Promise<Metadata> => {
+  const user = await getUserProfile(params.userId);
+
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  return {
+    title: `${user.name} (${user.username})`,
+  };
+};
+
+type PageParams = {
   params: {
     userId: string;
   };
-}) {
+};
+
+export default async function UserPage({ params }: PageParams) {
   const session = await getAuthSession();
   const user = await getUserProfile(params.userId);
 
